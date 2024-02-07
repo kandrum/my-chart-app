@@ -1,0 +1,46 @@
+.div1 {
+font-weight: lighter;
+font-size: 12px;   
+}
+.div2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 20%;
+  height: 50px;
+  margin-top: 150px;
+  margin-left: 20px;
+  padding: 0;
+  background: #cac6d0;
+  margin-top: 20px;
+}
+
+button{
+  color: rgb(12, 11, 11);
+  margin-right: 15px;
+}
+.btn {
+  background-color: #4CAF50; /* A fresh green color */
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  margin-left: 20px;
+  border-radius: 5px;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 20px; /* Adds space above the button */
+}
+
+.btn:hover {
+  background-color: #45a049; /* A slightly darker shade of green for hover */
+  transform: translateY(-2px); /* Gives a slight lift effect when hovered */
+}
+
+.btn:active {
+  background-color: #3e8e41; /* Even darker for active state */
+  transform: translateY(1px); /* Resets position to give a pressed effect */
+}
+

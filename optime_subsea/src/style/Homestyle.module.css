@@ -1,0 +1,61 @@
+.container {
+  display: grid;
+  grid-template-areas:
+    "header header"
+    "sidebar content";
+  grid-template-columns: 300px 1fr; /* Increase sidebar width to 300px */
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+}
+
+.header {
+  grid-area: header;
+  background-color: #333; /* Path to your background image */
+  background-size: cover; /* Cover the entire area */
+  background-position: center; /* Center the background image */
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  animation: fadeIn 1s ease-out forwards;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: #333;
+  color: white;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  animation: slideInFromLeft 0.5s ease-out forwards;
+}
+
+.content {
+  grid-area: content;
+  background-color: #f9f9f9;
+  padding: 20px;
+  overflow-y: auto;
+  animation: fadeInScaleUp 0.5s ease-out forwards;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fadeInScaleUp {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
