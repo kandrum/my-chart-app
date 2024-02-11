@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import Header from './Header';
 import Layout from './Layout';
 import Content from './Content';
+import { setUploadProject } from './redux/actions/uploadProjectActions'; // Adjust the import path as needed
 import Styles from './style/Homestyle.module.css';
 
-function Home() {
-  const [companies, setCompanies] = useState([]);
-  const [uploadProject, setUploadProject] = useState({ visible: false, projectName: '' });
+function Home({ uploadProject, setUploadProjectAction }) {
+  // No need to use useState for companies or uploadProject as they are now managed by Redux
 
   const handleProjectSelect = (companyName, projectName) => {
-    setUploadProject({ visible: true, companyName, projectName });
+    // Dispatch action to update the uploadProject state in Redux
+    setUploadProjectAction({ visible: true, companyName, projectName });
   };
 
   return (
@@ -18,14 +20,23 @@ function Home() {
         <Header />
       </div>
       <div className={Styles.sidebar}>
-        <Layout  companies={companies} setCompanies={setCompanies} onProjectSelect={handleProjectSelect}/>
-        {/* */}
+        {/* Layout now directly connects to Redux for companies, no need to pass as props */}
+        <Layout onProjectSelect={handleProjectSelect} />
       </div>
       <div className={Styles.content}>
-        <Content uploadProject={uploadProject} setUploadProject={setUploadProject} />
+        {/* Content might also directly connect to Redux or receive uploadProject as a prop from Home */}
+        <Content uploadProject={uploadProject} />
       </div>
     </div>
   );
 }
 
-export default Home;
+const mapStateToProps = (state) => ({
+  uploadProject: state.uploadProject,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setUploadProjectAction: (project) => dispatch(setUploadProject(project)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

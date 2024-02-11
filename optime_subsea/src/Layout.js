@@ -1,9 +1,19 @@
-// Layout.js
 import React, { useState } from 'react';
-import CompanyItem from './CompanyItem';
+import { connect } from 'react-redux';
+import { addCompany } from './redux/actions/companiesActions'; // Adjust import path as needed
+import CompanyItem from './CompanyItem'; // Adjust import path as needed
 import Styles from './style/Layoutstyle.module.css';
 
-function Layout({ companies, setCompanies, onProjectSelect }) {
+// Add Redux state and actions to props
+const mapStateToProps = (state) => ({
+  companies: state.companies,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  addCompany: (companyName) => dispatch(addCompany(companyName)),
+});
+
+function Layout({ companies, addCompany, onProjectSelect }) {
   const [showInput, setShowInput] = useState(false);
   const [companyName, setCompanyName] = useState('');
   
@@ -17,15 +27,15 @@ function Layout({ companies, setCompanies, onProjectSelect }) {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (companyName.trim() !== '') {
-      setCompanies([...companies, companyName]);
+    if (companyName.trim() !== '') { // Check if the companyName is not just empty spaces
+      addCompany(companyName); // Dispatch the action to add a new company
       setCompanyName(''); // Clear the input field
     }
-    setShowInput(false); 
+    setShowInput(false); // Hide the input field
   };
 
   return (
-    <div className={Styles.component3}>
+    <div className={Styles.component}>
       <div className={Styles.sidebar}>
         <button onClick={handleAddCompanyClick} className={Styles.dropdownButton}>Add Company</button>
         {showInput && (
@@ -46,9 +56,8 @@ function Layout({ companies, setCompanies, onProjectSelect }) {
           ))}
         </ul>
       </div>
-     
     </div>
   );
 }
 
-export default Layout;
+export default connect(mapStateToProps, mapDispatchToProps)(Layout);

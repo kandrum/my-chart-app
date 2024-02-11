@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import Styles from './style/CompanyItemstyle.module.css';
 
 function CompanyItem({ companyName, onProjectSelect }) {
-  const [showProjectsInput, setShowProjectsInput] = useState(false);
-  const [projectName, setProjectName] = useState('');
-  const [projects, setProjects] = useState([]);
+  const [showProjectsInput, setShowProjectsInput] = useState(false);//toggle the visibility of inputfeild for adding new project
+  const [projectName, setProjectName] = useState('');//stores the current input value for the new project name.
+  const [projects, setProjects] = useState([]);//Stores projectName associated with company.
 
   const handleAddProjectClick = () => {
     setShowProjectsInput(!showProjectsInput);
@@ -31,7 +31,7 @@ function CompanyItem({ companyName, onProjectSelect }) {
   return (
     <li>
       <span className={Styles.companyName}>{companyName}</span>
-      <button onClick={handleAddProjectClick} className={Styles.addProjectButton}>
+      <button onClick={handleAddProjectClick} className={Styles.addProjectButton}> {/* plus button here*/}
       </button>
       {showProjectsInput && (
         <form onSubmit={handleSubmitProject} className={Styles.projectForm}>
@@ -48,7 +48,7 @@ function CompanyItem({ companyName, onProjectSelect }) {
       <ul className={Styles.projectList}>
         {projects.map((project, index) => (
            <li key={index} onClick={() => handleProjectNameClick(project)}>{project}</li>
-        ))}
+        ))} {/* List rendering with each CompnayItem displays clickable project names that when clicked triggers onProjectSelect*/}
       </ul>
     </li>
   );
