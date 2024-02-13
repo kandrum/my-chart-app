@@ -6,11 +6,36 @@ import backgroundImage from './style/Image2.png'; // Import the background image
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [errorMessage, setErrorMessage] = useState(''); // State to store error message
     const navigate = useNavigate();
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
       event.preventDefault();
-      navigate('/home');
+      // Reset error message
+      setErrorMessage('');
+
+      try {
+        const response = await fetch('http://localhost:1226/logincheck', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+        });
+
+        const data = await response.json();
+        console.log(data)
+        if (data.result.checkstatus) {
+          console.log("Login success from login component")
+          navigate('/home');
+        } else {
+          // If checkstatus is false or not present, display an error message
+          setErrorMessage('Wrong credentials. Please try again.');
+        }
+      } catch (error) {
+        console.error('Login error:', error);
+        setErrorMessage('An error occurred. Please try again later.');
+      }
     };
 
     // Inline style for the background image
@@ -44,6 +69,7 @@ function Login() {
             />
           </label>
           <br />
+          {errorMessage && <div className={styles.error}>{errorMessage}</div>} {/* Display error message if any */}
           <button type="submit" className={styles.button}>Submit</button> 
         </form>
       </div>  

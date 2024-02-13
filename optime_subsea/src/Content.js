@@ -29,7 +29,7 @@ const Content = ({ uploadProject, setUploadProject }) => {
     const handleSubmit = () => {
         navigate('/analyze', { state: { fileData } });
         // Reset uploadProject state to hide the upload interface
-        setUploadProject({ visible: false, projectName: '' });
+        //setUploadProject({ visible: false, projectName: '' });
     };
 
     // Only display the upload interface if a project has been selected
