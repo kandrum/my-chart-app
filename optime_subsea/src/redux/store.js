@@ -1,3 +1,4 @@
+//store.js
 import { createStore,combineReducers } from 'redux';
 import companiesReducer from './reducers/companiesReducers';
 import uploadProjectReducer from './reducers/uploadProjectReducers';

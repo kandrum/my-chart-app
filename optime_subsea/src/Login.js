@@ -23,9 +23,15 @@ function Login() {
           body: JSON.stringify({ username, password }),
         });
 
+        if (!response.ok) {
+          // Handle non-200 responses, assume wrong credentials for simplicity
+          setErrorMessage('Wrong credentials. Please try again.');
+          return;
+        }
+
         const data = await response.json();
         console.log(data)
-        if (data.result.checkstatus) {
+        if (data.result && data.result.checkstatus) {
           console.log("Login success from login component")
           navigate('/home');
         } else {

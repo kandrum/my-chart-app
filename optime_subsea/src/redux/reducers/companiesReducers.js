@@ -1,3 +1,4 @@
+//companiesReducers.js
 import { ADD_COMPANY, SET_COMPANIES } from '../actionTypes';
 
 const initialState = [];

@@ -1,3 +1,4 @@
+//companiesActions.js
 import { ADD_COMPANY, SET_COMPANIES } from '../actionTypes';
 
 export const addCompany = (companyName) => ({
