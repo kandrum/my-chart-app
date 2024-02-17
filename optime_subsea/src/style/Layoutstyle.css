@@ -1,0 +1,28 @@
+/* layoutstyle.css */
+.layout-container {
+  @apply bg-gray-200 shadow-lg h-full;
+}
+
+.layout-buttons {
+  @apply flex flex-col items-center py-6;
+}
+
+.add-company-button {
+  @apply bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-opacity-50;
+}
+
+.company-form {
+  @apply w-full px-4 my-2;
+}
+
+.company-input {
+  @apply mt-2 w-full border border-gray-300 px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300;
+}
+
+.submit-button {
+  @apply w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-md mt-3 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50;
+}
+
+.company-list {
+  @apply w-full px-4;
+}

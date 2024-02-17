@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { addCompany } from './redux/actions/companiesActions';
 import CompanyItem from './CompanyItem';
+import './style/Layoutstyle.css';
 
 const mapStateToProps = (state) => ({
   companies: state.companies,
@@ -33,32 +34,26 @@ function Layout({ companies, addCompany, onProjectSelect }) {
   };
 
   return (
-    <div className="bg-gray-200 shadow-lg h-full">
-      <div className="flex flex-col items-center py-6">
-        <button
-          onClick={handleAddCompanyClick}
-          className="bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-opacity-50"
-        >
+    <div className="layout-container">
+      <div className="layout-buttons">
+        <button onClick={handleAddCompanyClick} className="add-company-button">
           Add Company
         </button>
         {showInput && (
-          <form onSubmit={handleSubmit} className="w-full px-4 my-2">
+          <form onSubmit={handleSubmit} className="company-form">
             <input
               type="text"
               value={companyName}
               onChange={handleCompanyNameChange}
               placeholder="Enter company name"
-              className="mt-2 w-full border border-gray-300 px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300"
+              className="company-input"
             />
-            <button
-              type="submit"
-              className="w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-md mt-3 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50"
-            >
+            <button type="submit" className="submit-button">
               Submit
             </button>
           </form>
         )}
-        <div className="w-full px-4">
+        <div className="company-list">
           {companies.map((company, index) => (
             <CompanyItem key={index} companyName={company} onProjectSelect={onProjectSelect} />
           ))}

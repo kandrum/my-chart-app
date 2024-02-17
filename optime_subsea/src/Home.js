@@ -1,10 +1,10 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import Header from './Header';
 import Layout from './Layout';
 import Content from './Content';
 import { setUploadProject } from './redux/actions/uploadProjectActions'; // Adjust the import path as needed
-//import Styles from './style/Homestyle.module.css';
+import './style/Homestyle.css'
 
 function Home({ uploadProject, setUploadProjectAction }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -17,15 +17,15 @@ function Home({ uploadProject, setUploadProjectAction }) {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="bg-purple-600">
+    <div className="flex-container">
+      <div className="header-bg">
         <Header toggleSidebar={toggleSidebar} />
       </div>
-      <div className={`flex flex-1 overflow-hidden ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+      <div className={`flex-content ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
         <div className={`transform top-0 left-0 w-64 bg-purple-500 overflow-auto transition duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
           <Layout onProjectSelect={handleProjectSelect} />
         </div>
-        <div className="flex-1 overflow-y-auto">
+        <div className="content-overflow">
           <Content uploadProject={uploadProject} />
         </div>
       </div>

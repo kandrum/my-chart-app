@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './style/CompanyItemstyle.css';
 
 function CompanyItem({ companyName, onProjectSelect }) {
   const [showProjectsInput, setShowProjectsInput] = useState(false);
@@ -27,31 +28,31 @@ function CompanyItem({ companyName, onProjectSelect }) {
   };
 
   return (
-    <div className="mt-4">
-      <div className="flex justify-between items-center">
-        <span className="text-lg font-semibold">{companyName}</span>
-        <button onClick={handleAddProjectClick} className="bg-blue-500 text-white p-2 rounded-full">
+    <div className="company-item-container">
+      <div className="company-header">
+        <span className="company-name">{companyName}</span>
+        <button onClick={handleAddProjectClick} className="add-project-button">
           {/* Plus icon could be an SVG or an image */}
           +
         </button>
       </div>
       {showProjectsInput && (
-        <form onSubmit={handleSubmitProject} className="my-2">
+        <form onSubmit={handleSubmitProject} className="project-form">
           <input
             type="text"
             value={projectName}
             onChange={handleProjectNameChange}
             placeholder="Enter project name"
-            className="border-2 border-gray-200 rounded py-2 px-4 w-full my-2"
+            className="project-input"
           />
-          <button type="submit" className="bg-green-500 text-white p-2 rounded my-2">
+          <button type="submit" className="submit-project-button">
             Submit
           </button>
         </form>
       )}
-      <ul className="list-disc pl-5">
+      <ul className="project-list">
         {projects.map((project, index) => (
-          <li key={index} onClick={() => handleProjectNameClick(project)} className="cursor-pointer hover:text-blue-600">
+          <li key={index} onClick={() => handleProjectNameClick(project)} className="project-item">
             {project}
           </li>
         ))}

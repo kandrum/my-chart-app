@@ -1,0 +1,39 @@
+/* Headerstyle.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .focus\:shadow-outline {
+    @apply focus:outline-none;
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5); /* Example shadow; adjust as needed */
+  }
+}
+
+.header-container {
+  @apply bg-blue-700 text-white flex justify-between items-center px-6 py-4;
+}
+
+.menu-button {
+  @apply text-xl text-white focus:outline-none focus:shadow-md; /* Adjust the shadow size as needed */
+}
+
+.header-title {
+  @apply text-2xl font-bold;
+}
+
+.user-button {
+  @apply flex items-center text-sm rounded-full focus:outline-none p-2;
+}
+
+.user-avatar {
+  @apply rounded-full w-8 h-8;
+}
+
+.dropdown-menu {
+  @apply absolute right-0 mt-2 bg-white rounded-md shadow-lg overflow-hidden z-10;
+}
+
+.dropdown-link {
+  @apply block px-4 py-2 text-gray-800 hover:bg-purple-200;
+}
