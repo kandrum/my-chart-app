@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { verifyUser } from './redux/actions/VerifyAction';
 import styles from './style/Loginstyle.module.css';
 import backgroundImage from './style/Image2.png'; // Import the background image
 
@@ -8,11 +10,12 @@ function Login() {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); // State to store error message
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleSubmit = async (event) => {
       event.preventDefault();
       // Reset error message
-      setErrorMessage('');
+      setErrorMessage('');      
 
       try {
         const response = await fetch('http://localhost:1226/logincheck', {
@@ -30,7 +33,9 @@ function Login() {
         }
 
         const data = await response.json();
-        console.log(data)
+        
+        dispatch(verifyUser(data));
+
         if (data.result && data.result.checkstatus) {
           console.log("Login success from login component")
           navigate('/home');

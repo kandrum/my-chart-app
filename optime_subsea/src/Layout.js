@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { addCompany } from './redux/actions/companiesActions';
 import CompanyItem from './CompanyItem';
 import './style/Layoutstyle.css';
@@ -16,8 +17,17 @@ function Layout({ companies, addCompany, onProjectSelect }) {
   const [showInput, setShowInput] = useState(false);
   const [companyName, setCompanyName] = useState('');
 
+  const userType = useSelector((state) => state.userType);
+  console.log("From Layout.js",userType);
+  console.log("From Layout.js",userType.result);
+
   const handleAddCompanyClick = () => {
-    setShowInput(!showInput);
+    if (userType.result.role === "admin"){
+      setShowInput(!showInput);
+    }else {
+      // Show an alert if the user is not an admin
+      alert("You do not have access to add a company.");
+    }  
   };
 
   const handleCompanyNameChange = (event) => {
@@ -32,6 +42,7 @@ function Layout({ companies, addCompany, onProjectSelect }) {
     }
     setShowInput(false);
   };
+
 
   return (
     <div className="layout-container">

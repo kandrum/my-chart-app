@@ -32,7 +32,6 @@ function CompanyItem({ companyName, onProjectSelect }) {
       <div className="company-header">
         <span className="company-name">{companyName}</span>
         <button onClick={handleAddProjectClick} className="add-project-button">
-          {/* Plus icon could be an SVG or an image */}
           +
         </button>
       </div>

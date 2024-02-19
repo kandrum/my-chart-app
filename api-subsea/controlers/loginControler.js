@@ -26,7 +26,7 @@ db.connect((err) => {
                 console.error('Error fetching data:', err);
                 reject(err); // Pass the error to the caller
             } else if (results.length > 0) {
-                resolve({ checkstatus: true, username: results[0].username });
+                resolve({ checkstatus: true, username: results[0].username, role:results[0].role });
             } else {
                 console.log('No user found with the given username and password.');
                 resolve(null); // Indicate no user was found
