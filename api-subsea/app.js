@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const { checkUser } = require("./controlers/loginControler.js");
+const { registerUser } =require("./controlers/registerControler.js")
 
 const PORT = 1226;
 
@@ -46,6 +47,8 @@ app.post("/logincheck", (req, res) => {
         res.status(500).json({ message: "An error occurred during login check" });
     });
 });
+//creating a new router to recive data from frontend
+app.post('/register', registerUser);
 
 // Start the server
 app.listen(PORT, () => {

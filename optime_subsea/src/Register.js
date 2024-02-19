@@ -7,11 +7,35 @@ function Register() {
   const [userRole, setUserRole] = useState('');
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ username, password, userRole });
-    // Here, you would typically handle the form submission, such as sending data to a backend server
+    try {
+      const response = await fetch('http://localhost:1226/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+          role: userRole, // Assuming userRole is a state variable holding the role
+        }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log('Registration successful', data);
+        // Handle successful registration (e.g., navigate to login page)
+      } else {
+        console.error('Registration failed', data.message);
+        // Handle registration failure (e.g., show error message)
+      }
+    } catch (error) {
+      console.error('Error submitting form', error);
+      // Handle network errors (e.g., show error message)
+    }
   };
+  
 
   return (
     <div className="background-container">
@@ -30,6 +54,7 @@ function Register() {
           <option value="">Select a role</option>
           <option value="supervisor">Supervisor</option>
           <option value="user">User</option>
+          <option value="admin">Admin</option>
         </select>
       </div>
       <button type="submit" className="submit-button">Register</button>
