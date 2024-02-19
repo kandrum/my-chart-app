@@ -19,7 +19,6 @@ function Layout({ companies, addCompany, onProjectSelect }) {
 
   const userType = useSelector((state) => state.userType);
   console.log("From Layout.js",userType);
-  console.log("From Layout.js",userType.result);
 
   const handleAddCompanyClick = () => {
     if (userType.result.role === "admin"){
