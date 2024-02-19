@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './style/Registerstyle.css'
 
 function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [userRole, setUserRole] = useState('');
+  const navigate = useNavigate();
 
 
   const handleSubmit = async (e) => {
@@ -24,6 +26,7 @@ function Register() {
   
       const data = await response.json();
       if (response.ok) {
+        navigate('/home')
         console.log('Registration successful', data);
         // Handle successful registration (e.g., navigate to login page)
       } else {
