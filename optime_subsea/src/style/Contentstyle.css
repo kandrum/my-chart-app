@@ -3,9 +3,18 @@
   @apply container mx-auto px-4;
 }
 
+/* Contentstyle.css */
 .header {
-  @apply py-5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* Adjust the height as needed */
 }
+
+.header h1 {
+  text-align: center;
+}
+
 
 .header-title {
   @apply text-2xl font-bold text-center mb-4;

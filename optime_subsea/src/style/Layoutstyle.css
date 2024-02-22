@@ -1,28 +1,49 @@
-/* layoutstyle.css */
-.layout-container {
-  @apply bg-gray-200 shadow-lg h-full;
+/* LayoutStyle.css */
+.sidebar {
+  @apply fixed top-16 left-0 w-64 h-screen bg-gray-800 text-white overflow-y-auto z-10;
 }
 
-.layout-buttons {
-  @apply flex flex-col items-center py-6;
+.sidebar-header {
+  @apply text-xl font-semibold p-4 bg-gray-700;
 }
 
-.add-company-button {
-  @apply bg-blue-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-opacity-50;
+.sidebar-content {
+  @apply p-4 flex flex-col;
 }
 
-.company-form {
-  @apply w-full px-4 my-2;
+.add-company-btn {
+  @apply mb-3 py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-md w-full cursor-pointer;
 }
 
-.company-input {
-  @apply mt-2 w-full border border-gray-300 px-3 py-2 rounded-md shadow-sm focus:outline-none focus:ring focus:border-blue-300;
+.sidebar-input,
+.project-input {
+  @apply mb-3 p-2 bg-gray-400 text-white border border-gray-600 rounded-md outline-none w-full;
 }
 
-.submit-button {
-  @apply w-full bg-green-500 text-white font-semibold py-2 px-4 rounded-md mt-3 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50;
+.company-section {
+  @apply mb-4;
 }
 
-.company-list {
-  @apply w-full px-4;
+.company-name {
+  @apply font-bold text-lg;
 }
+
+.project-name {
+  @apply ml-4 my-1 text-sm;
+}
+
+.add-project-btn {
+  @apply my-2 py-1 px-2 bg-green-500 hover:bg-green-600 text-white rounded-md text-xs;
+}
+
+/* LayoutStyle.css */
+.clickable {
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.clickable:hover {
+  background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
+}
+
+/* Add or update existing styles as needed */

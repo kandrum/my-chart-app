@@ -1,76 +1,109 @@
+// Layout.jsx
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { addCompany } from './redux/actions/companiesActions';
-import CompanyItem from './CompanyItem';
+import { useDispatch, useSelector } from 'react-redux';
 import './style/Layoutstyle.css';
+import { setCurrentCompany, setCurrentProject } from './redux/actions/currentSelectionActions'; // Adjust the import path as needed
 
-const mapStateToProps = (state) => ({
-  companies: state.companies,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  addCompany: (companyName) => dispatch(addCompany(companyName)),
-});
-
-function Layout({ companies, addCompany, onProjectSelect }) {
-  const [showInput, setShowInput] = useState(false);
+const Layout = () => {
+  const [showAddCompanyInput, setShowAddCompanyInput] = useState(false);
   const [companyName, setCompanyName] = useState('');
+  const [projectName, setProjectName] = useState('');
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const dispatch = useDispatch();
+  const companies = useSelector(state => state.companies);
 
-  const userType = useSelector((state) => state.userType);
-  console.log("From Layout.js",userType);
-
-  const handleAddCompanyClick = () => {
-    if (userType.result.role === "admin"){
-      setShowInput(!showInput);
-    }else {
-      // Show an alert if the user is not an admin
-      alert("You do not have access to add a company.");
-    }  
-  };
-
-  const handleCompanyNameChange = (event) => {
-    setCompanyName(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (companyName.trim() !== '') {
-      addCompany(companyName);
+  const handleAddCompanyKeyPress = (e) => {
+    if (e.key === 'Enter' && companyName.trim()) {
+      dispatch({ type: 'ADD_COMPANY', payload: { name: companyName.trim() } });
       setCompanyName('');
+      setShowAddCompanyInput(false);
     }
-    setShowInput(false);
   };
 
+  const handleAddProjectKeyPress = (e) => {
+    if (e.key === 'Enter' && selectedCompany && projectName.trim()) {
+      dispatch({
+        type: 'ADD_PROJECT',
+        payload: { companyName: selectedCompany, project: projectName.trim() }
+      });
+      setProjectName('');
+      setSelectedCompany(null); // Clear selected company to hide the input box
+    }
+  };
+
+  const handleProjectClick = (companyName, projectName) => {
+   
+    dispatch(setCurrentCompany(companyName));
+    dispatch(setCurrentProject(projectName));
+  };
 
   return (
-    <div className="layout-container">
-      <div className="layout-buttons">
-        <button onClick={handleAddCompanyClick} className="add-company-button">
-          Add Company
-        </button>
-        {showInput && (
-          <form onSubmit={handleSubmit} className="company-form">
-            <input
-              type="text"
-              value={companyName}
-              onChange={handleCompanyNameChange}
-              placeholder="Enter company name"
-              className="company-input"
-            />
-            <button type="submit" className="submit-button">
-              Submit
-            </button>
-          </form>
+    <div className="sidebar">
+      <div className="sidebar-header">Manage Companies and Projects</div>
+      <div className="sidebar-content">
+        {showAddCompanyInput ? (
+          <input
+            autoFocus
+            type="text"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            onKeyPress={handleAddCompanyKeyPress}
+            placeholder="Enter company name"
+            className="sidebar-input"
+            onBlur={() => setShowAddCompanyInput(false)}
+          />
+        ) : (
+          <button
+            onClick={() => setShowAddCompanyInput(true)}
+            className="add-company-btn"
+          >
+            + Add Company
+          </button>
         )}
-        <div className="company-list">
-          {companies.map((company, index) => (
-            <CompanyItem key={index} companyName={company} onProjectSelect={onProjectSelect} />
-          ))}
-        </div>
+
+        {companies.map((company, index) => (
+          <div key={index} className="company-section">
+            <div className="company-name">{company.name}</div>
+            {company.projects && company.projects.map((project, projIndex) => (
+              <div
+                key={projIndex}
+                className="project-name clickable"
+                onClick={() => handleProjectClick(company.name, project)}
+              >
+                {project}
+              </div>
+            ))}
+            {selectedCompany === company.name && (
+              <>
+                <input
+                  type="text"
+                  value={projectName}
+                  onChange={(e) => setProjectName(e.target.value)}
+                  onKeyPress={handleAddProjectKeyPress}
+                  placeholder="Enter project name"
+                  className="project-input"
+                />
+                <button
+                  onClick={() => {
+                    handleAddProjectKeyPress({ key: 'Enter' });
+                  }}
+                  className="add-project-confirm-btn"
+                >
+                  Add Project
+                </button>
+              </>
+            )}
+            <button
+              onClick={() => setSelectedCompany(company.name)}
+              className="add-project-btn"
+            >
+              + Add Project
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
-}
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Layout);
+export default Layout;

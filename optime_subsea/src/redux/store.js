@@ -1,13 +1,14 @@
 //store.js
 import { createStore,combineReducers } from 'redux';
 import companiesReducer from './reducers/companiesReducers';
-import uploadProjectReducer from './reducers/uploadProjectReducers';
+import currentSelectionReducer from './reducers/currentCompanyProject'
 import userTypeReduce from './reducers/VerifyReducer';
 
 const rootReducer = combineReducers({
   companies: companiesReducer,
-  uploadProject: uploadProjectReducer,
   userType:userTypeReduce,
+  currentSelection: currentSelectionReducer,
+  
 });
 
 const store = createStore(

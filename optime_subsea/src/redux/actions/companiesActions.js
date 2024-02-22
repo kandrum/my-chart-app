@@ -1,12 +1,12 @@
-//companiesActions.js
-import { ADD_COMPANY, SET_COMPANIES } from '../actionTypes';
 
-export const addCompany = (companyName) => ({
-  type: ADD_COMPANY,
-  payload: companyName,
+export const addCompany = (payload) => ({
+  type: 'ADD_COMPANY',
+  payload: payload,
 });
 
-export const setCompanies = (companies) => ({
-  type: SET_COMPANIES,
-  payload: companies,
+export const addProject= (payload)=>({
+  type:'ADD_PROJECT',
+  payload: payload,
+
 });
+
