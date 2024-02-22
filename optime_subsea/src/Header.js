@@ -1,29 +1,37 @@
+// Header.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux'; // Add useDispatch import
+import { toggleSidebarVisibility } from './redux/actions/uiAction';
 import user from './user.png';
-import './style/Headerstyle.css'
+import './style/Headerstyle.css';
 
-function Header({ toggleSidebar }) {
+function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch(); // Use useDispatch hook
   const userType = useSelector((state) => state.userType);
+
+  console.log("Header",userType);
+
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   const goToRegister = () => {
     if (userType.result.role === "admin"){
       navigate('/register');
-    }else {
+    } else {
       alert("You do not have access to Register user");
-    }  
-    
-  }
+    }
+  };
 
   const goToLogin = () => {
     navigate('/');
-  }
+  };
 
+  // Call this function when the menu button is clicked
+  const toggleSidebar = () => {
+    dispatch(toggleSidebarVisibility());
+  };
 
   return (
     <div className="header-container">

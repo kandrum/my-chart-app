@@ -44,7 +44,7 @@ const Content = () => {
     return (
         <div className="content-container">
             <div className="header flex justify-center items-center">
-                <h1>You are uploading a file to {currentCompany} - {currentProject}</h1>
+                <h1 className="big-bold-header">You are uploading a file to {currentCompany} - {currentProject}</h1>
             </div>
             <div className="file-upload-container">
                 <div className="button-row">

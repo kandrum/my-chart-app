@@ -3,6 +3,13 @@
   @apply container mx-auto px-4;
 }
 
+/* Add this class in your CSS file */
+.big-bold-header {
+  font-size: 2rem; /* Adjusts the size to be bigger */
+  font-weight: 600; /* Makes it bolder than normal but not too bold */
+}
+
+
 /* Contentstyle.css */
 .header {
   display: flex;
@@ -22,6 +29,7 @@
 
 .file-upload-container {
   @apply bg-gray-200 ml-64 mr-64 p-4 rounded-lg shadow-md;
+  margin-left: 16rem;
 }
 
 .button-row {
@@ -36,3 +44,6 @@
   @apply text-gray-300 text-sm;
 }
 
+.content-container {
+  padding-left: 22rem; /* Adjusts padding to create space from the left sidebar */
+}

@@ -3,11 +3,13 @@ import { createStore,combineReducers } from 'redux';
 import companiesReducer from './reducers/companiesReducers';
 import currentSelectionReducer from './reducers/currentCompanyProject'
 import userTypeReduce from './reducers/VerifyReducer';
+import uiReducer from './reducers/uiReducer';
 
 const rootReducer = combineReducers({
   companies: companiesReducer,
   userType:userTypeReduce,
   currentSelection: currentSelectionReducer,
+  ui:uiReducer,
   
 });
 

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './style/Layoutstyle.css';
 import { setCurrentCompany, setCurrentProject } from './redux/actions/currentSelectionActions'; // Adjust the import path as needed
 
+
 const Layout = () => {
   const [showAddCompanyInput, setShowAddCompanyInput] = useState(false);
   const [companyName, setCompanyName] = useState('');
@@ -12,11 +13,21 @@ const Layout = () => {
   const dispatch = useDispatch();
   const companies = useSelector(state => state.companies);
 
+  // Get the visibility state from Redux store
+  const isSidebarVisible = useSelector(state => state.ui.isSidebarVisible);
+  const userType = useSelector((state) => state.userType);
+
+  console.log('Layout',userType);
+
   const handleAddCompanyKeyPress = (e) => {
-    if (e.key === 'Enter' && companyName.trim()) {
-      dispatch({ type: 'ADD_COMPANY', payload: { name: companyName.trim() } });
-      setCompanyName('');
-      setShowAddCompanyInput(false);
+    if(userType.result.role === "admin"){
+      if (e.key === 'Enter' && companyName.trim()) {
+        dispatch({ type: 'ADD_COMPANY', payload: { name: companyName.trim() } });
+        setCompanyName('');
+        setShowAddCompanyInput(false);
+      }
+    }else{
+      alert("You do not have access to Add company");
     }
   };
 
@@ -32,13 +43,12 @@ const Layout = () => {
   };
 
   const handleProjectClick = (companyName, projectName) => {
-   
     dispatch(setCurrentCompany(companyName));
     dispatch(setCurrentProject(projectName));
   };
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isSidebarVisible ? '' : 'hidden'}`}>
       <div className="sidebar-header">Manage Companies and Projects</div>
       <div className="sidebar-content">
         {showAddCompanyInput ? (
@@ -57,13 +67,21 @@ const Layout = () => {
             onClick={() => setShowAddCompanyInput(true)}
             className="add-company-btn"
           >
-            + Add Company
+            Add Company
           </button>
         )}
 
         {companies.map((company, index) => (
           <div key={index} className="company-section">
-            <div className="company-name">{company.name}</div>
+            <div className="flex justify-between items-center">
+              <div className="company-name">{company.name}</div>
+              <button
+                onClick={() => setSelectedCompany(company.name)}
+                className="add-project-btn"
+              >
+                +
+              </button>
+            </div>
             {company.projects && company.projects.map((project, projIndex) => (
               <div
                 key={projIndex}
@@ -83,22 +101,8 @@ const Layout = () => {
                   placeholder="Enter project name"
                   className="project-input"
                 />
-                <button
-                  onClick={() => {
-                    handleAddProjectKeyPress({ key: 'Enter' });
-                  }}
-                  className="add-project-confirm-btn"
-                >
-                  Add Project
-                </button>
               </>
             )}
-            <button
-              onClick={() => setSelectedCompany(company.name)}
-              className="add-project-btn"
-            >
-              + Add Project
-            </button>
           </div>
         ))}
       </div>
