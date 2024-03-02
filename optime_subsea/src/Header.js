@@ -1,54 +1,61 @@
 // Header.jsx
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux'; // Add useDispatch import
-import { toggleSidebarVisibility } from './redux/actions/uiAction';
-import user from './user.png';
-import './style/Headerstyle.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebarVisibility } from "./redux/actions/uiAction";
+import user from "./user.png";
+import styles from "./style/Headerstyle.module.css"; // Adjust the import path as needed
 
 function Header() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Use useDispatch hook
+  const dispatch = useDispatch();
   const userType = useSelector((state) => state.userType);
 
-  console.log("Header",userType);
+  console.log("Header", userType);
 
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   const goToRegister = () => {
-    if (userType.result.role === "admin"){
-      navigate('/register');
+    if (userType.result.role === "admin") {
+      navigate("/register");
     } else {
       alert("You do not have access to Register user");
     }
   };
 
   const goToLogin = () => {
-    navigate('/');
+    navigate("/");
   };
 
-  // Call this function when the menu button is clicked
   const toggleSidebar = () => {
     dispatch(toggleSidebarVisibility());
   };
 
   return (
-    <div className="header-container">
-      <button onClick={toggleSidebar} className="menu-button">
+    <div className={styles.headerContainer}>
+      <button onClick={toggleSidebar} className={styles.menuButton}>
         ☰
       </button>
-      <h1 className="header-title">Graph Visualization</h1>
-      <div className="relative">
-        <button onClick={toggleDropdown} className="user-button">
-          <img src={user} alt="avatar" className="user-avatar" />
+      <h1 className={styles.headerTitle}>Data-Visualization optime subsea </h1>
+      <div className={styles.relative}>
+        <button onClick={toggleDropdown} className={styles.userButton}>
+          <img src={user} alt="avatar" className={styles.userAvatar} />
         </button>
         {isDropdownOpen && (
-          <div className="dropdown-menu">
-            <a href="#" className="dropdown-link">Settings</a>
-            <a href="#" className="dropdown-link">Help</a>
-            <button onClick={goToRegister} className="dropdown-link">Register</button>
-            <button onClick={goToLogin} className="dropdown-link">Logout</button>
+          <div className={styles.dropdownMenu}>
+            <a href="#" className={styles.dropdownLink}>
+              Settings
+            </a>
+            <a href="#" className={styles.dropdownLink}>
+              Help
+            </a>
+            <button onClick={goToRegister} className={styles.dropdownLink}>
+              Register
+            </button>
+            <button onClick={goToLogin} className={styles.dropdownLink}>
+              Logout
+            </button>
           </div>
         )}
       </div>

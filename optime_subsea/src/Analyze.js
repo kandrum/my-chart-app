@@ -1,98 +1,162 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement } from 'chart.js';
-import { Bar, Pie } from 'react-chartjs-2';
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { TailSpin } from "react-loader-spinner";
+import { Bar } from "react-chartjs-2";
+import styles from "./style/Analyze.module.css";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
 
-// Register the necessary components for Chart.js
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
 
-function Analyze() {
-    const location = useLocation();
-    const [barChartData, setBarChartData] = useState({});
-    const [pieChartData, setPieChartData] = useState({});
+const Analyze = () => {
+  const location = useLocation();
+  const { selectedTag, fromDate, toDate } = location.state;
 
-    useEffect(() => {
-        if (location.state?.fileData) {
-            const data = location.state.fileData;
+  const [isLoading, setIsLoading] = useState(true);
+  const [chartData, setChartData] = useState({});
+  // Update state to include all metrics visibility
+  const [isVisible, setIsVisible] = useState({
+    min: true,
+    max: true,
+    mean: true,
+    average: true,
+  });
+  const [error, setError] = useState(null);
 
-            // Check if data is an array and has content
-            if (Array.isArray(data) && data.length > 0) {
-                // Aggregate oil production by year for the bar chart
-                const productionByYear = data.reduce((acc, row) => {
-                    const year = row.year;
-                    const production = parseFloat(row.oil_prod32_14) || 0;
-                    acc[year] = (acc[year] || 0) + production;
-                    return acc;
-                }, {});
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/analyzetofrom", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            tag: selectedTag.toString(),
+            from_date: fromDate,
+            to_date: toDate,
+          }),
+        });
 
-                // Aggregate oil production by country for the pie chart
-                const productionByCountry = data.reduce((acc, row) => {
-                    const country = row.cty_name;
-                    const production = parseFloat(row.oil_prod32_14) || 0;
-                    acc[country] = (acc[country] || 0) + production;
-                    return acc;
-                }, {});
-
-                // Convert aggregated data to chart format for the bar chart
-                const barChartLabels = Object.keys(productionByYear);
-                const barChartDataSet = Object.values(productionByYear);
-
-                setBarChartData({
-                    labels: barChartLabels,
-                    datasets: [{
-                        label: 'Oil Production by Year',
-                        data: barChartDataSet,
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    }]
-                });
-
-                // Convert aggregated data to chart format for the pie chart
-                const pieChartLabels = Object.keys(productionByCountry);
-                const pieChartDataSet = Object.values(productionByCountry);
-
-                setPieChartData({
-                    labels: pieChartLabels,
-                    datasets: [{
-                        label: 'Oil Production by Country',
-                        data: pieChartDataSet,
-                        backgroundColor: pieChartLabels.map(() => `hsla(${Math.random() * 360}, 100%, 50%, 0.5)`),
-                    }]
-                });
-            } else {
-                console.error('Data is not an array or is empty:', data);
-            }
-        } else {
-            console.error('fileData is undefined');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-    }, [location.state?.fileData]);
 
-    const chartContainerStyle = {
-        width: '100%', // Use the full width of the container
-        maxWidth: '800px', // Set a maximum width for the charts
-        margin: '20px auto',
-
+        const data = await response.json();
+        // Adjust here to include all datasets
+        setChartData({
+          labels: data.map((d) => d.date),
+          datasets: [
+            {
+              label: "Min",
+              data: data.map((d) => d.min),
+              borderColor: "rgb(255, 99, 132)",
+              backgroundColor: "rgba(255, 99, 132, 0.5)",
+              hidden: !isVisible.min,
+            },
+            {
+              label: "Max",
+              data: data.map((d) => d.max),
+              borderColor: "rgb(53, 162, 235)",
+              backgroundColor: "rgba(53, 162, 235, 0.5)",
+              hidden: !isVisible.max,
+            },
+            {
+              label: "Mean",
+              data: data.map((d) => d.mean),
+              borderColor: "rgb(75, 192, 192)",
+              backgroundColor: "rgba(75, 192, 192, 0.5)",
+              hidden: !isVisible.mean,
+            },
+            {
+              label: "Average",
+              data: data.map((d) => d.average), // Assuming 'average' is provided by your backend
+              borderColor: "rgb(255, 205, 86)",
+              backgroundColor: "rgba(255, 205, 86, 0.5)",
+              hidden: !isVisible.average,
+            },
+          ],
+        });
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    const individualChartStyle = {
-        width: '800px', // Fixed width for both charts
-        height: '800px',
-    };
+    fetchData();
+  }, [selectedTag, fromDate, toDate, isVisible]);
 
-    return (
-        <div>
-            <h1>Data Analysis</h1>
-            <div style={chartContainerStyle}>
-                <div style={individualChartStyle}>
-                    <h2>Bar Chart - Oil Production by Year</h2>
-                    {barChartData.labels ? <Bar data={barChartData} /> : <p>No bar chart data available.</p>}
-                </div>
-                <div style={individualChartStyle}>
-                    <h2>Pie Chart - Oil Production by Country</h2>
-                    {pieChartData.labels ? <Pie data={pieChartData} /> : <p>No pie chart data available.</p>}
-                </div>
-            </div>
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top",
+        onClick: (e, legendItem, legend) => {
+          // Update visibility based on legend item click
+          setIsVisible({
+            ...isVisible,
+            [legendItem.text.toLowerCase()]:
+              !isVisible[legendItem.text.toLowerCase()],
+          });
+        },
+      },
+      title: {
+        display: true,
+        text: "Data Analysis",
+      },
+    },
+  };
+
+  return (
+    <div className={styles.container}>
+      <h1 className={styles.title}>Analyze Component</h1>
+      <p className={styles.paragraph}>Selected Tag: {selectedTag}</p>
+      <p className={styles.paragraph}>From Date: {fromDate}</p>
+      <p className={styles.paragraph}>To Date: {toDate}</p>
+
+      {isLoading ? (
+        <div className={styles.loader}>
+          <TailSpin color="#00BFFF" height={80} width={80} />
         </div>
-    );
-}
+      ) : error ? (
+        <div className={styles.errorMessage}>Error: {error}</div>
+      ) : (
+        <>
+          <div className={styles.toggles}>
+            {Object.keys(isVisible).map((key) => (
+              <label key={key}>
+                <input
+                  type="checkbox"
+                  checked={isVisible[key]}
+                  onChange={() =>
+                    setIsVisible({ ...isVisible, [key]: !isVisible[key] })
+                  }
+                />
+                {key.charAt(0).toUpperCase() + key.slice(1)}{" "}
+                {/* Capitalize label */}
+              </label>
+            ))}
+          </div>
+          <Bar data={chartData} options={options} />
+        </>
+      )}
+    </div>
+  );
+};
 
 export default Analyze;

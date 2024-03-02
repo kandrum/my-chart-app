@@ -1,69 +1,86 @@
-import React, { useState, useRef } from "react";
-import { useNavigate } from 'react-router-dom';
-import Papa from 'papaparse';
-import './style/Contentstyle.css';
-import { useSelector } from "react-redux"; // Corrected from UseSelector to useSelector
-
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import styles from "./style/Contentstyle.module.css"; // Ensure the path to your styles is correct
+import { useNavigate } from "react-router-dom";
 const Content = () => {
-    const [buttonText, setButtonText] = useState("Upload File");
-    const [fileData, setFileData] = useState(null);
-    const fileInputRef = useRef();
-    const navigate = useNavigate();
-
-    // Accessing current company and project from Redux state
-    const currentCompany = useSelector(state => state.currentSelection.currentCompany);
-    const currentProject = useSelector(state => state.currentSelection.currentProject);
-
-    // If either currentCompany or currentProject is null, do not render the component
-    if (!currentCompany || !currentProject) {
-        // Optionally, return null or a message prompting selection
-        return null; // or return <div>Please select a company and a project.</div>;
-    }
-
-    const handleButtonClick = () => {
-        fileInputRef.current.click();
-    };
-
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            setButtonText(file.name);
-            Papa.parse(file, {
-                header: true,
-                complete: (results) => {
-                    setFileData(results.data);
-                }
-            });
+  const [tags, setTags] = useState([]);
+  const [selectedTag, setSelectedTag] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+  const currentProject = useSelector(
+    (state) => state.currentSelection.currentProject
+  );
+  const navigate = useNavigate(); // Hook for navigation
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/tag");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
+        const data = await response.json();
+        const sortedTags = data.unique_tags.sort((a, b) => a - b);
+        setTags(sortedTags);
+      } catch (error) {
+        console.error("Fetching tags failed: ", error);
+      }
     };
 
-    const handleSubmit = () => {
-        navigate('/analyze', { state: { fileData } });
-    };
+    if (currentProject) {
+      fetchTags();
+    }
+  }, [currentProject]);
 
-    return (
-        <div className="content-container">
-            <div className="header flex justify-center items-center">
-                <h1 className="big-bold-header">You are uploading a file to {currentCompany} - {currentProject}</h1>
-            </div>
-            <div className="file-upload-container">
-                <div className="button-row">
-                    <button onClick={handleButtonClick} className="upload-button">
-                        {buttonText}
-                    </button>
-                    <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
-                </div>
-                {fileData && (
-                    <span className="record-info">{fileData.length} records loaded</span>
-                )}
-            </div>
-            <div className="flex justify-center mt-4">
-                <button onClick={handleSubmit} className="bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-700 focus:ring-opacity-50">
-                    Submit
-                </button>
-            </div>
+  const handleTagClick = (tag) => {
+    setSelectedTag(tag);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Navigate to /analyze with state
+    navigate("/analyze", { state: { selectedTag, fromDate, toDate } });
+  };
+
+  if (!currentProject) {
+    return <p>Please select a project to see the tags.</p>;
+  }
+
+  return (
+    <div className={styles.contentContainer}>
+      <div className={styles.tagsDisplayContainer}>
+        <div className={styles.header}>
+          <h1>Tags for project: {currentProject}</h1>
         </div>
-    );
+        <ul>
+          {tags.map((tag, index) => (
+            <li
+              key={index}
+              className={styles.tag}
+              onClick={() => handleTagClick(tag)}
+            >{`TAG ${tag}`}</li>
+          ))}
+        </ul>
+      </div>
+      <div className={styles.filter}>
+        <h2>Selected Tag: {selectedTag}</h2>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="date"
+            value={fromDate}
+            onChange={(e) => setFromDate(e.target.value)}
+            required
+          />
+          <input
+            type="date"
+            value={toDate}
+            onChange={(e) => setToDate(e.target.value)}
+            required
+          />
+          <button type="submit">Analyze</button>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default Content;

@@ -3,6 +3,7 @@ const cors = require('cors');
 const app = express();
 const { checkUser } = require("./controlers/loginControler.js");
 const { registerUser } =require("./controlers/registerControler.js")
+const { companyAndProject }=require("./controlers/Company&projectControler.js")
 
 const PORT = 1226;
 
@@ -49,6 +50,9 @@ app.post("/logincheck", (req, res) => {
 });
 //creating a new router to recive data from frontend
 app.post('/register', registerUser);
+
+// creating a new router to recive data from from=ntend
+app.post('/companyAndProject',companyAndProject);
 
 // Start the server
 app.listen(PORT, () => {

@@ -1,0 +1,6 @@
+uvicorn
+fastapi
+dask[dataframe]
+pandas
+numpy
+
